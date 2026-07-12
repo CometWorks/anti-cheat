@@ -72,5 +72,8 @@ public static class PatchHelpers
         // called on each game update (tick).
         // For example:
         //MyPatch.Update();
+#if DEDICATED
+        ValidationEnforcementPatch.Update();
+#endif
     }
 }
