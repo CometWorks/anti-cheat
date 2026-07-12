@@ -37,11 +37,20 @@ public class PluginConfig : IPluginConfig
     private bool rejectKnownSectorOverflow = true;
     private bool rejectOversizedGpsMessages = true;
     private bool rejectOversizedFactionMessages = true;
+    private bool rejectInvalidPlayerColorLists = true;
+    private bool preventGrinderStockpileSpawns = false;
+    private bool sanitizeToolTargets = true;
+    private bool enforceToolTargetCaps = true;
+    private int maxShipToolTargets = 30;
+    private bool blockTimerDetachToolbarActions = true;
+    private bool cleanUnsafeToolbarReferences = true;
+    private bool sanitizeTerminalPropertyBounds = true;
     private int maxKnownSectorsPerClient = 4096;
     private int maxSocialListEntries = 2048;
     private int maxGpsStringLength = 2048;
     private int maxFactionStringLength = 2048;
     private bool adminAuditEnabled = true;
+    private bool adminAuditExtendedEnabled = true;
     private int adminAuditLogIntervalSeconds = 10;
 
     public bool Enabled
@@ -104,6 +113,61 @@ public class PluginConfig : IPluginConfig
         set => SetValue(ref rejectOversizedFactionMessages, value);
     }
 
+    public bool RejectInvalidPlayerColorLists
+    {
+        get => rejectInvalidPlayerColorLists;
+        set => SetValue(ref rejectInvalidPlayerColorLists, value);
+    }
+
+    [Description("Prevents ship grinders from spawning construction stockpile item drops while grinding blocks. Useful item-spam/performance guard; changes grinder item return behavior.")]
+    public bool PreventGrinderStockpileSpawns
+    {
+        get => preventGrinderStockpileSpawns;
+        set => SetValue(ref preventGrinderStockpileSpawns, value);
+    }
+
+    [Description("Removes invalid, closed, self, or duplicate ship-tool targets before grinders, welders, and drills process them.")]
+    public bool SanitizeToolTargets
+    {
+        get => sanitizeToolTargets;
+        set => SetValue(ref sanitizeToolTargets, value);
+    }
+
+    [Description("Limits grinder, welder, and drill targets processed per activation to reduce item-spam and CPU spikes.")]
+    public bool EnforceToolTargetCaps
+    {
+        get => enforceToolTargetCaps;
+        set => SetValue(ref enforceToolTargetCaps, value);
+    }
+
+    [Description("Maximum grinder, welder, or drill targets allowed per activation when EnforceToolTargetCaps is enabled.")]
+    public int MaxShipToolTargets
+    {
+        get => maxShipToolTargets;
+        set => SetValue(ref maxShipToolTargets, value);
+    }
+
+    [Description("Removes Detach terminal actions from timer block toolbars to prevent stale mechanical detach abuse.")]
+    public bool BlockTimerDetachToolbarActions
+    {
+        get => blockTimerDetachToolbarActions;
+        set => SetValue(ref blockTimerDetachToolbarActions, value);
+    }
+
+    [Description("Clears unsafe toolbar references on ownerless toolbar blocks and when a block's ownership changes to Nobody.")]
+    public bool CleanUnsafeToolbarReferences
+    {
+        get => cleanUnsafeToolbarReferences;
+        set => SetValue(ref cleanUnsafeToolbarReferences, value);
+    }
+
+    [Description("Clamps bad replicated rotor, piston, wheel, gyro, and thrust override terminal values after sync apply.")]
+    public bool SanitizeTerminalPropertyBounds
+    {
+        get => sanitizeTerminalPropertyBounds;
+        set => SetValue(ref sanitizeTerminalPropertyBounds, value);
+    }
+
     public int MaxKnownSectorsPerClient
     {
         get => maxKnownSectorsPerClient;
@@ -132,6 +196,13 @@ public class PluginConfig : IPluginConfig
     {
         get => adminAuditEnabled;
         set => SetValue(ref adminAuditEnabled, value);
+    }
+
+    [Description("Extends admin audit logging to paste/delete/cut, ownership changes, forced toolbar cleanup, and terminal value sanitization.")]
+    public bool AdminAuditExtendedEnabled
+    {
+        get => adminAuditExtendedEnabled;
+        set => SetValue(ref adminAuditExtendedEnabled, value);
     }
 
     public int AdminAuditLogIntervalSeconds

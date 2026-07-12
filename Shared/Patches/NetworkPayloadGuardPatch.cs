@@ -64,6 +64,42 @@ public static class MutedPlayersGuardPatch
     }
 }
 
+[HarmonyPatch(typeof(MyPlayerCollection), "OnPlayerColorsChangedRequest")]
+public static class PlayerColorGuardPatch
+{
+    private const int ExpectedPlayerColorSlots = 14;
+
+    private static bool Prefix(List<Vector3> newColors)
+    {
+        if (Common.Config == null || !Common.Config.Enabled || !Common.Config.RejectInvalidPlayerColorLists || MyEventContext.Current.IsLocallyInvoked)
+            return true;
+
+        if (newColors?.Count == ExpectedPlayerColorSlots)
+        {
+            foreach (var color in newColors)
+            {
+                if (!IsFinite(color.X) || !IsFinite(color.Y) || !IsFinite(color.Z))
+                    return Reject("invalid player color list values");
+            }
+
+            return true;
+        }
+
+        return Reject($"invalid player color list size: {newColors?.Count ?? 0}");
+    }
+
+    private static bool IsFinite(float value)
+    {
+        return !float.IsNaN(value) && !float.IsInfinity(value);
+    }
+
+    private static bool Reject(string reason)
+    {
+        (MyMultiplayer.Static as MyMultiplayerServerBase)?.ValidationFailed(MyEventContext.Current.Sender.Value, true, reason, false);
+        return false;
+    }
+}
+
 [HarmonyPatch(typeof(MyClientState), nameof(MyClientState.AddKnownSector))]
 public static class KnownSectorGuardPatch
 {

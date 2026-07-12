@@ -19,7 +19,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Patches\ExampleTranspilerPatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Patches\NetworkPayloadGuardPatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Patches\PatchHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Patches\TerminalPropertyBoundsPatch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Patches\ToolbarExploitPatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Patches\ToolbarRequestPatch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Patches\ToolExploitPatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Patches\ValidationEnforcementPatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\Common.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\ICommonPlugin.cs" />

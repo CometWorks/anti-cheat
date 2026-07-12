@@ -16,10 +16,19 @@ public interface IPluginConfig : INotifyPropertyChanged
     bool RejectKnownSectorOverflow { get; set; }
     bool RejectOversizedGpsMessages { get; set; }
     bool RejectOversizedFactionMessages { get; set; }
+    bool RejectInvalidPlayerColorLists { get; set; }
+    bool PreventGrinderStockpileSpawns { get; set; }
+    bool SanitizeToolTargets { get; set; }
+    bool EnforceToolTargetCaps { get; set; }
+    int MaxShipToolTargets { get; set; }
+    bool BlockTimerDetachToolbarActions { get; set; }
+    bool CleanUnsafeToolbarReferences { get; set; }
+    bool SanitizeTerminalPropertyBounds { get; set; }
     int MaxKnownSectorsPerClient { get; set; }
     int MaxSocialListEntries { get; set; }
     int MaxGpsStringLength { get; set; }
     int MaxFactionStringLength { get; set; }
     bool AdminAuditEnabled { get; set; }
+    bool AdminAuditExtendedEnabled { get; set; }
     int AdminAuditLogIntervalSeconds { get; set; }
 }
