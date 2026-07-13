@@ -369,3 +369,7 @@ MigrationBackup/
 
 # Plugin specific
 *.il
+
+graphify-out/cache/
+
+graphify-out/cost.json

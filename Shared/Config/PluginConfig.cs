@@ -45,6 +45,8 @@ public class PluginConfig : IPluginConfig
     private bool blockTimerDetachToolbarActions = true;
     private bool cleanUnsafeToolbarReferences = true;
     private bool sanitizeTerminalPropertyBounds = true;
+    private bool enforceInventoryRequestAuthority = true;
+    private bool enforceBuildRequestAuthority = true;
     private int maxKnownSectorsPerClient = 4096;
     private int maxSocialListEntries = 2048;
     private int maxGpsStringLength = 2048;
@@ -166,6 +168,20 @@ public class PluginConfig : IPluginConfig
     {
         get => sanitizeTerminalPropertyBounds;
         set => SetValue(ref sanitizeTerminalPropertyBounds, value);
+    }
+
+    [Description("Restricts floating-item pickup and inventory transfer requests to the sender's character reach or connected grids.")]
+    public bool EnforceInventoryRequestAuthority
+    {
+        get => enforceInventoryRequestAuthority;
+        set => SetValue(ref enforceInventoryRequestAuthority, value);
+    }
+
+    [Description("Binds survival build and projector requests to the sending player's identity, character, reach, and a bounded batch size.")]
+    public bool EnforceBuildRequestAuthority
+    {
+        get => enforceBuildRequestAuthority;
+        set => SetValue(ref enforceBuildRequestAuthority, value);
     }
 
     public int MaxKnownSectorsPerClient
