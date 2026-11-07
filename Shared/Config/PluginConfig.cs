@@ -185,7 +185,7 @@ public class PluginConfig : IPluginConfig
         set => SetValue(ref enforceBuildRequestAuthority, value);
     }
 
-    [Description("Refuses Store block buy, sell and item list requests from players whose character is farther from the block than the game's terminal range (5 m).")]
+    [Description("Refuses Store block (store, ATM, vending machine) buy, sell and item list requests from players whose character is farther from the block than the game's use distance (5 m).")]
     public bool EnforceStoreDistance
     {
         get => enforceStoreDistance;

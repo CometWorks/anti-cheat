@@ -10,13 +10,16 @@ using Sandbox.Game.World;
 using Shared.Plugin;
 using VRage.Game;
 using VRage.Network;
+using VRageMath;
 
 namespace Shared.Patches;
 
 // The game checks only block access on Store block requests, so a modified client can trade from anywhere.
-// These guards refuse buy, sell and item list requests unless the sender's character is within terminal range,
-// the same test the game's terminal screen uses (MyTerminalPropertiesController.TestConnection).
-// A seated character counts where its seat is. The refused client still gets a failed answer, so it does not hang.
+// These guards refuse buy, sell and item list requests on every Store block (stores, ATMs, vending machines) unless
+// the sender's character is within MyConstants.DEFAULT_INTERACTIVE_DISTANCE, the reach of the game's use ray.
+// That ray starts at the player's head, so the gap is measured from the character's whole collision box, not only
+// from its feet. A seated character counts where its seat is. The refused client still gets a failed answer, so
+// it does not hang.
 
 // The mod API has a public GetStoreItems(List<IMyStoreItem>) too
 [HarmonyPatch(typeof(MyStoreBlock), "GetStoreItems", typeof(bool))]
@@ -27,8 +30,12 @@ public static class StoreItemsDistanceGuardPatch
         "OnGetStoreItemsResult"
     );
 
-    private static bool Prefix(MyStoreBlock __instance)
+    private static bool Prefix(MyStoreBlock __instance, bool isPlayerRequest)
     {
+        // Every client asks each vending machine for its items once, from wherever the player is, to fill its screen
+        if (!isPlayerRequest && __instance is MyVendingMachine)
+            return true;
+
         if (StoreDistanceGuard.IsInRange(__instance, "item list"))
             return true;
 
@@ -118,9 +125,7 @@ internal static class StoreDistanceGuard
         var distanceSquared =
             character == null
                 ? double.PositiveInfinity
-                : store.PositionComp.WorldAABB.DistanceSquared(
-                    character.PositionComp.GetPosition()
-                );
+                : GapSquared(store.PositionComp.WorldAABB, character.PositionComp.WorldAABB);
         if (distanceSquared < RangeSquared)
             return true;
 
@@ -129,5 +134,8 @@ internal static class StoreDistanceGuard
         );
         return false;
     }
+
+    private static double GapSquared(BoundingBoxD a, BoundingBoxD b) =>
+        Vector3D.Max(Vector3D.Zero, Vector3D.Max(a.Min - b.Max, b.Min - a.Max)).LengthSquared();
 }
 #endif
