@@ -26,6 +26,7 @@ public interface IPluginConfig : INotifyPropertyChanged
     bool SanitizeTerminalPropertyBounds { get; set; }
     bool EnforceInventoryRequestAuthority { get; set; }
     bool EnforceBuildRequestAuthority { get; set; }
+    bool EnforceStoreDistance { get; set; }
     int MaxKnownSectorsPerClient { get; set; }
     int MaxSocialListEntries { get; set; }
     int MaxGpsStringLength { get; set; }

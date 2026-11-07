@@ -47,6 +47,7 @@ public class PluginConfig : IPluginConfig
     private bool sanitizeTerminalPropertyBounds = true;
     private bool enforceInventoryRequestAuthority = true;
     private bool enforceBuildRequestAuthority = true;
+    private bool enforceStoreDistance = true;
     private int maxKnownSectorsPerClient = 4096;
     private int maxSocialListEntries = 2048;
     private int maxGpsStringLength = 2048;
@@ -182,6 +183,13 @@ public class PluginConfig : IPluginConfig
     {
         get => enforceBuildRequestAuthority;
         set => SetValue(ref enforceBuildRequestAuthority, value);
+    }
+
+    [Description("Refuses Store block buy, sell and item list requests from players whose character is farther from the block than the game's terminal range (5 m).")]
+    public bool EnforceStoreDistance
+    {
+        get => enforceStoreDistance;
+        set => SetValue(ref enforceStoreDistance, value);
     }
 
     public int MaxKnownSectorsPerClient
