@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using VRage.Game.ModAPI;
 
 namespace Shared.Config;
 
@@ -52,6 +53,8 @@ public class PluginConfig : IPluginConfig
     private int maxSocialListEntries = 2048;
     private int maxGpsStringLength = 2048;
     private int maxFactionStringLength = 2048;
+    private bool hideProgrammableBlockScripts = true;
+    private MyPromoteLevel programmableBlockScriptMinPromoteLevel = MyPromoteLevel.SpaceMaster;
     private bool adminAuditEnabled = true;
     private bool adminAuditExtendedEnabled = true;
     private int adminAuditLogIntervalSeconds = 10;
@@ -214,6 +217,20 @@ public class PluginConfig : IPluginConfig
     {
         get => maxFactionStringLength;
         set => SetValue(ref maxFactionStringLength, value);
+    }
+
+    [Description("Hides Programmable Block scripts, storage and run arguments from clients who are neither the block owner nor a same-faction member.")]
+    public bool HideProgrammableBlockScripts
+    {
+        get => hideProgrammableBlockScripts;
+        set => SetValue(ref hideProgrammableBlockScripts, value);
+    }
+
+    [Description("Minimum promote level that may always see Programmable Block scripts regardless of ownership. None disables the level bypass.")]
+    public MyPromoteLevel ProgrammableBlockScriptMinPromoteLevel
+    {
+        get => programmableBlockScriptMinPromoteLevel;
+        set => SetValue(ref programmableBlockScriptMinPromoteLevel, value);
     }
 
     public bool AdminAuditEnabled

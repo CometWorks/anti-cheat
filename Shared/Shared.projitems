@@ -19,6 +19,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Patches\ExampleTranspilerPatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Patches\NetworkPayloadGuardPatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Patches\PatchHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Patches\ProgrammableBlockScriptFilterPatch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Patches\ScriptAccessHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Patches\StoreDistanceGuardPatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Patches\TerminalPropertyBoundsPatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Patches\ToolbarExploitPatch.cs" />
