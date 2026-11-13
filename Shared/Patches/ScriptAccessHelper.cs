@@ -1,16 +1,15 @@
 #if DEDICATED || MAGNETAR
 using Sandbox.Game.Entities.Blocks;
 using Sandbox.Game.World;
-using Shared.Plugin;
-using VRage.Game.ModAPI;
+using VRage.Game;
 
 namespace Shared.Patches;
 
 /// <summary>
 /// Determines whether a connected client (by Steam ID) is authorized to see
 /// the script stored in a given Programmable Block.
-/// Authorized means: the client meets the configured promote level, is the grid owner,
-/// or is in the same faction as the owner.
+/// Mirrors the game's own terminal access rule: owner, faction share (which also
+/// covers share-with-all), unowned blocks, or an admin with UseTerminals.
 /// </summary>
 internal static class ScriptAccessHelper
 {
@@ -22,71 +21,26 @@ internal static class ScriptAccessHelper
         if (steamId == 0)
             return true;
 
-        var minLevel = Common.Config?.ProgrammableBlockScriptMinPromoteLevel ?? MyPromoteLevel.SpaceMaster;
-        var userLevel = minLevel != MyPromoteLevel.None
-            ? MySession.Static.GetUserPromoteLevel(steamId)
-            : MyPromoteLevel.None;
+        var identityId = MySession.Static.Players.TryGetIdentityId(steamId);
+        if (identityId == 0)
+            return false;
 
-        var ownerId = pb.OwnerId;
-        var requesterIdentityId = MySession.Static.Players.TryGetIdentityId(steamId);
-
-        var ownerFaction = MySession.Static.Factions.TryGetPlayerFaction(ownerId);
-        var requesterFaction = MySession.Static.Factions.TryGetPlayerFaction(requesterIdentityId);
-
-        return IsAuthorizedCore(
-            steamId, minLevel, userLevel,
-            ownerId, requesterIdentityId,
-            ownerFaction?.FactionId,
-            requesterFaction?.FactionId);
+        return IsAuthorizedCore(pb.GetUserRelationToOwner(identityId), pb.HasAdminUseTerminals(identityId));
     }
 
     /// <summary>
     /// Pure authorization logic, decoupled from SE statics for testability.
     /// </summary>
-    /// <param name="steamId">Steam ID of the requesting client (0 = server/local).</param>
-    /// <param name="minLevel">Minimum promote level that grants unconditional access.</param>
-    /// <param name="userLevel">The requesting client's current promote level.</param>
-    /// <param name="ownerId">Identity ID of the block owner (0 = unowned).</param>
-    /// <param name="requesterIdentityId">Identity ID resolved from <paramref name="steamId"/> (0 = not found).</param>
-    /// <param name="ownerFactionId">Faction ID of the owner, or null if the owner has no faction.</param>
-    /// <param name="requesterFactionId">Faction ID of the requester, or null if they have no faction.</param>
-    internal static bool IsAuthorizedCore(
-        ulong steamId,
-        MyPromoteLevel minLevel,
-        MyPromoteLevel userLevel,
-        long ownerId,
-        long requesterIdentityId,
-        long? ownerFactionId,
-        long? requesterFactionId)
+    /// <param name="relation">The requester's relation to the block owner.</param>
+    /// <param name="hasAdminUseTerminals">Whether the requester has the UseTerminals admin permission.</param>
+    internal static bool IsAuthorizedCore(MyRelationsBetweenPlayerAndBlock relation, bool hasAdminUseTerminals)
     {
-        // Local/server invocations carry steamId == 0; always allow.
-        if (steamId == 0)
+        if (hasAdminUseTerminals)
             return true;
 
-        // Privileged users bypass ownership/faction checks.
-        if (minLevel != MyPromoteLevel.None && userLevel >= minLevel)
-            return true;
-
-        // Unowned blocks are not secret.
-        if (ownerId == 0)
-            return true;
-
-        // Requester identity could not be resolved.
-        if (requesterIdentityId == 0)
-            return false;
-
-        // Direct owner match.
-        if (requesterIdentityId == ownerId)
-            return true;
-
-        // Same-faction check.
-        if (ownerFactionId == null)
-            return false;
-
-        if (requesterFactionId == null)
-            return false;
-
-        return ownerFactionId == requesterFactionId;
+        return relation == MyRelationsBetweenPlayerAndBlock.Owner
+               || relation == MyRelationsBetweenPlayerAndBlock.FactionShare
+               || relation == MyRelationsBetweenPlayerAndBlock.NoOwnership;
     }
 }
 #endif

@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using VRage.Game.ModAPI;
 
 namespace Shared.Config;
 
@@ -33,7 +32,6 @@ public interface IPluginConfig : INotifyPropertyChanged
     int MaxGpsStringLength { get; set; }
     int MaxFactionStringLength { get; set; }
     bool HideProgrammableBlockScripts { get; set; }
-    MyPromoteLevel ProgrammableBlockScriptMinPromoteLevel { get; set; }
     bool AdminAuditEnabled { get; set; }
     bool AdminAuditExtendedEnabled { get; set; }
     int AdminAuditLogIntervalSeconds { get; set; }
