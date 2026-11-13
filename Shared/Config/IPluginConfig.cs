@@ -31,6 +31,7 @@ public interface IPluginConfig : INotifyPropertyChanged
     int MaxSocialListEntries { get; set; }
     int MaxGpsStringLength { get; set; }
     int MaxFactionStringLength { get; set; }
+    bool HideProgrammableBlockScripts { get; set; }
     bool AdminAuditEnabled { get; set; }
     bool AdminAuditExtendedEnabled { get; set; }
     int AdminAuditLogIntervalSeconds { get; set; }
