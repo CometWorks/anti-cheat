@@ -20,7 +20,8 @@ Current protections include toolbar request validation, camera-setting bounds,
 GPS and faction payload length caps, social-list and known-sector overflow
 guards, player color-list validation, ship tool target caps, grinder stockpile
 suppression, ownerless toolbar cleanup, terminal property bounds sanitization,
-and escalation for repeated validation failures.
+programmable block script visibility filtering, and escalation for repeated
+validation failures.
 
 The admin audit module logs creative tools toggles, creative/admin block
 placement, creative-mode welding, paste/delete/cut, ownership changes, forced

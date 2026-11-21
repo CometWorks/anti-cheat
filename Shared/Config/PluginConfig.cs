@@ -52,6 +52,7 @@ public class PluginConfig : IPluginConfig
     private int maxSocialListEntries = 2048;
     private int maxGpsStringLength = 2048;
     private int maxFactionStringLength = 2048;
+    private bool hideProgrammableBlockScripts = false;
     private bool adminAuditEnabled = true;
     private bool adminAuditExtendedEnabled = true;
     private int adminAuditLogIntervalSeconds = 10;
@@ -214,6 +215,13 @@ public class PluginConfig : IPluginConfig
     {
         get => maxFactionStringLength;
         set => SetValue(ref maxFactionStringLength, value);
+    }
+
+    [Description("Hides Programmable Block scripts, storage and run arguments from clients who cannot edit the block. Owners, faction-shared members, unowned blocks and admins with UseTerminals are allowed.")]
+    public bool HideProgrammableBlockScripts
+    {
+        get => hideProgrammableBlockScripts;
+        set => SetValue(ref hideProgrammableBlockScripts, value);
     }
 
     public bool AdminAuditEnabled
